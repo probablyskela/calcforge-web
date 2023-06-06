@@ -13,6 +13,10 @@ export default mergeConfig(
       transformMode: {
         web: [/\.[jt]sx$/],
       },
+      coverage: {
+        all: true,
+        provider: 'istanbul' // or 'c8'
+      }
     }
   })
 )
