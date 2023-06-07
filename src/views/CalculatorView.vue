@@ -13,6 +13,9 @@ import BaseReview from '@/components/BaseReview.vue';
 import type { Review } from '@/assets/interfaces/review/IReview';
 import type { ReviewCreate } from '@/assets/interfaces/review/IReviewCreate';
 import type {CalculatorRun} from '@/assets/interfaces/calculator/ICalculatorRun';
+import * as io from "socket.io-client";
+import {connect_socket} from '@/assets/services/socket';
+
 interface Props {
     id: string
 };
@@ -31,7 +34,6 @@ const curr_user = await user_service.get_profile(false);
 
 
 function curr_user_has_review(reviews: [Review], user: User) {
-    console.log(reviews, user, curr_user);
   if (curr_user === false) {
     return -1;
   }
@@ -58,7 +60,29 @@ async function run_calc() {
   calculatorRun.output = await calculator_service.run_calculator(+props.id, calculatorRun.output) as string;
 }
 
-console.log(has_review.value)
+const socket_url = import.meta.env.VITE_SOCKET_URL;
+const socket = io.connect(socket_url, {
+  query: {
+    'calculator_id': props.id
+  }
+});
+const socket_connected = ref(true);
+console.log(socket);
+
+socket.on('connected', () => {
+  console.log(socket.id);
+  socket_connected.value = true;
+})
+
+socket.on('disconnected', () => {
+  console.log(socket.id);
+  socket_connected.value = false;
+})
+
+socket.on("reviews_changed", (args) => {
+  console.log('aksjdkljaskldjasd');
+  console.log(args);      
+})
 </script>
 
 <template>
