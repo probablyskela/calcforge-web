@@ -24,17 +24,12 @@ export async function update_field(url: string, field: string, value: string) {
                 'Accept': "application/json",
                 'Content-Type': 'application/json'
             }
-        }).catch(function (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['request']['response'])['error']);
-            return false;
-        });
+        })
 
-        return res === false;
+        return res;
         
     } catch (error: any) {
-        console.log(error);
-        alert(JSON.parse(error['request']['response'])['error']);
+        alert(error);
         return false;
     }
 }

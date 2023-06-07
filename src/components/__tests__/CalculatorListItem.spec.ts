@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import type { Mock } from 'vitest';
 import { flushPromises, mount, shallowMount } from '@vue/test-utils';
-import CalculatorsViewVue from '../CalculatorsView.vue';
 import type { Calculator } from '@/assets/interfaces/calculator/ICalculator';
 import { calculator_service } from '@/assets/services/calculator';
+import CalculatorListItemVue from '../CalculatorListItem.vue';
 
 vi.mock('@/stores/auth.store', () => ({
     useAuthStore: vi.fn(() => ({
@@ -29,8 +29,8 @@ const calculators: [Calculator] = [{
 }]
 
 
-describe('CalculatorsViewVue', () => {
+describe('CalculatorListItemVue', () => {
     it('renders', () => {
-        const wrapper = shallowMount(CalculatorsViewVue);
+        const wrapper = shallowMount(CalculatorListItemVue);
     })
 })

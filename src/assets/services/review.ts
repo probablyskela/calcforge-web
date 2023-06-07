@@ -22,11 +22,7 @@ export class review_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: AxiosError) {
-                console.log(error);
-                alert(error.response?.data);
-                return false;
-            });
+            })
 
             if (typeof(res) === 'boolean') {
                 return false;
@@ -34,8 +30,7 @@ export class review_service {
 
             return res.data;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['response'])['error']);
+            alert(error);
             return false;
         }
     }
@@ -51,11 +46,7 @@ export class review_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: AxiosError) {
-                console.log(error);
-                alert(error.response?.data);
-                return false;
-            });
+            })
 
             if (typeof(res) === 'boolean') {
                 return false;
@@ -63,8 +54,7 @@ export class review_service {
 
             return res.data;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['response'])['error']);
+            alert(error);
             return false;
         }
     }
@@ -80,11 +70,7 @@ export class review_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: AxiosError) {
-                console.log(error);
-                alert(error.response?.data);
-                return false;
-            });
+            })
 
             if (typeof(res) === 'boolean') {
                 return false;
@@ -92,8 +78,7 @@ export class review_service {
 
             return true;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['response'])['error']);
+            alert(error);
             return false;
         }
     } 

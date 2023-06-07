@@ -33,13 +33,8 @@ const calculatorSettings = reactive(<CalculatorSettings> {
 
     <h3>calculator code url:</h3>
     <div class="code-wrapper">
-        <label for="">
-            make code public:
-            <BaseInput v-model="calculatorSettings.is_public" :width="24" type="checkbox" placehoder="calculator  name"></BaseInput>
-        </label>
-        <label for="">
-            <BaseInput v-model="calculatorSettings.code" :width="240" type="url" placehoder="calculator code link"></BaseInput>
-        </label>
+        <label for="">make code public: <BaseInput v-model="calculatorSettings.is_public" :width="24" type="checkbox" placehoder="calculator  name"></BaseInput></label>
+        <label for=""><BaseInput v-model="calculatorSettings.code" :width="240" type="url" placehoder="calculator code link"></BaseInput></label>
     </div>
     <BaseButton @click.prevent="calculator_service.create_calculator(calculatorSettings)" :width="200">Create calculator</BaseButton>
 </div>

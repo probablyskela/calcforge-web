@@ -74,12 +74,6 @@ console.log(has_review.value)
             <p class="calculator-info_desc">{{ calculator.description }}</p>
             <a target="_blank" :href="calculator.code" v-if="calculator.is_public">code: {{ calculator.code }}</a>
           </div>
-        <!-- <h3>example:</h3>
-        <div class="calculator-content">
-            <p>input: {{ calculator.input }}</p>
-            <br>
-            <p>output: Lorem </p>
-        </div> -->
         <h3>run:</h3>
         <div class="calculator-content">
             <label> input:

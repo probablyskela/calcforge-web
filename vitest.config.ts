@@ -15,7 +15,7 @@ export default mergeConfig(
       },
       coverage: {
         all: true,
-        provider: 'istanbul' // or 'c8'
+        provider: 'c8' // or 'istanbul'
       }
     }
   })

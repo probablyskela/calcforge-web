@@ -35,8 +35,7 @@ export class user_service {
 
             return res.data;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['request']['response'])['error']);
+            alert(error);
             return false;
         }
     }
@@ -57,11 +56,7 @@ export class user_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: any) {
-                console.log(error);
-                alert(JSON.parse(error['response'])['error']);
-                return false;
-            });
+            })
 
             if (typeof(res) === 'boolean') {
                 return false;
@@ -69,8 +64,7 @@ export class user_service {
 
             return res.data;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['response'])['error']);
+            alert(error);
             return false;
         }
     }
@@ -113,11 +107,7 @@ export class user_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: any) {
-                console.log(error);
-                alert(JSON.parse(error['request']['response'])['error']);
-                return false;
-            });
+            })
 
             if (typeof(res) === 'boolean') {
                 return false;
@@ -125,8 +115,7 @@ export class user_service {
 
             return res.data;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['request']['response'])['error']);
+            alert(error);
             return false;
         }
     }
@@ -144,19 +133,16 @@ export class user_service {
                     'Accept': "application/json",
                     'Content-Type': 'application/json'
                 }
-            }).catch(function (error: any) {
-                console.log(error);
-                alert(JSON.parse(error['request']['response'])['error']);
-                return false;
-            });
+            })
 
             if (typeof(res) !== 'boolean') {
                 console.log(res);
                 await authStore.sign_out();
+                return true;
             }
+            return false;
         } catch (error: any) {
-            console.log(error);
-            alert(JSON.parse(error['request']['response'])['error']);
+            alert(error);
             return false;
         }
     }

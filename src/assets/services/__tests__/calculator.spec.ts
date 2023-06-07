@@ -1,13 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Mock } from 'vitest';
-import { flushPromises, mount, shallowMount } from '@vue/test-utils';
 import { calculator_service } from '../calculator';
 import type { Calculator } from '@/assets/interfaces/calculator/ICalculator';
-// import { beforeEach } from 'node:test';
-import axios, { AxiosError } from 'axios';
+import type { CalculatorSettings } from '@/assets/interfaces/calculator/ICalculatorSettings';
+import axios, { Axios, AxiosError } from 'axios';
+import router from '@/router';
 
 
-vi.mock('@/stores/auth.store');
+vi.mock('@/stores/auth.store', () => ({
+    useAuthStore: vi.fn(() => ({
+      get_token: vi.fn(),
+      sign_in: vi.fn(),
+      sign_up: vi.fn(),
+      sign_out: vi.fn(),
+      authorized: {
+        value: false,
+      },
+    })),
+  }));
+  
 vi.mock('axios');
 vi.mock('@/router');
 
@@ -29,6 +40,14 @@ const calculator: Calculator = {
     input: '1',
     is_public: true,
     name: '1'
+};
+
+const calculatorSettings: CalculatorSettings = {
+    name: '2',
+    description: '2',
+    input: '2',
+    code: '2',
+    is_public: false
 };
 
 // vi.mock('../../services/calculator', async () => {
@@ -62,22 +81,114 @@ describe('calculator service tests', () => {
         expect(result).toBe(false);
     })
 
-    // it('get_calculators throws error', async () => {
-    //     (axios.get as Mock).mockImplementation(() => {
-    //         throw new Error();
-    //     });
+    it('should handle error when fetching calculators', async () => {
+        const error = new Error('Failed to fetch calculators');
+        (axios.get as Mock).mockRejectedValue(error);
+  
+        const result = await calculator_service.get_calculators();
+  
+        expect(result).toBe(false);
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/calculators'), expect.any(Object));
+      });
 
-    //     const result = await calculator_service.get_calculators();
-
-    //     // expect(result).toBe(false);
-    // })
-
-    it('get_calculator_by_id', async () => {
+    it('should fetch calculator successfully', async () => {
         const response = { data: calculator };
         (axios.get as Mock).mockResolvedValue(response);
+  
+        const result = await calculator_service.get_calculator_by_id(1);
+  
+        expect(result).toEqual(calculator);
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/calculators/1'), expect.any(Object));
+    });
 
-        const result = await calculator_service.get_calculator_by_id(0);
+    it('should handle error when fetching calculator', async () => {
+        const error = new Error('Failed to fetch calculator');
+        (axios.get as Mock).mockRejectedValue(error);
+  
+        const result = await calculator_service.get_calculator_by_id(1);
+  
+        expect(result).toBe(false);
+        expect(axios.get).toHaveBeenCalledWith(expect.stringContaining('/calculators/1'), expect.any(Object));
+      });
 
-        expect(result).toBe(response.data);
-    })
+    it('create_calculator', async () => {
+        const response = true;
+        (axios.post as Mock).mockResolvedValue({data: calculator});
+  
+        const result = await calculator_service.create_calculator(calculator);
+  
+        expect(result).toBe(response);
+        expect(router.push).toHaveBeenCalledWith('/calculators/1');
+        expect(axios.post).toHaveBeenCalledWith(expect.stringContaining('/calculators/'), calculator, expect.any(Object));  
+    });
+
+    it('should run calculator successfully', async () => {
+        const id = 1;
+        const input = '1 + 2';
+        const result = { output: 3 };
+        const response = { data: result };
+        (axios.post as Mock).mockResolvedValue(response);
+  
+        const output = await calculator_service.run_calculator(id, input);
+  
+        expect(output).toEqual(result.output);
+        expect(axios.post).toHaveBeenCalledWith(
+          expect.stringContaining(`/calculators/${id}`),
+          { input },
+          expect.any(Object)
+        );
+      });
+
+      it('should handle error when running calculator', async () => {
+        const id = 1;
+        const input = '1 + 2';
+        const error = new Error('Failed to run calculator');
+        (axios.post as Mock).mockRejectedValue(error);
+  
+        const output = await calculator_service.run_calculator(id, input);
+  
+        expect(output).toBe(false);
+        expect(axios.post).toHaveBeenCalledWith(
+          expect.stringContaining(`/calculators/${id}`),
+          { input },
+          expect.any(Object)
+        );
+      });
+
+      it('should update calculator successfully', async () => {
+        const id = 1;
+        // (update_field as Mock).mockResolvedValue({});
+  
+        await calculator_service.update_calculator(id, calculatorSettings, calculator);
+  
+        // expect(update_field).toHaveBeenCalledWith(
+        //   expect.stringContaining(`/calculators/${id}`)
+        //   );
+      });
+
+      it('should delete calculator successfully', async () => {
+        const id = 1;
+        (axios.delete as Mock).mockResolvedValue({});
+  
+        const result = await calculator_service.delete_calculator(id);
+  
+        expect(result).toBe(true);
+        expect(axios.delete).toHaveBeenCalledWith(
+          expect.stringContaining(`/calculators/${id}`),
+          expect.any(Object)
+        );
+      });
+
+      it('should handle error when deleting calculator', async () => {
+        const id = 1;
+        (axios.delete as Mock).mockRejectedValue(new AxiosError('Failed to delete calculator'));
+  
+        const result = await calculator_service.delete_calculator(id);
+  
+        expect(result).toBe(false);
+        expect(axios.delete).toHaveBeenCalledWith(
+          expect.stringContaining(`/calculators/${id}`),
+          expect.any(Object)
+        );
+      });
 });

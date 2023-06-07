@@ -63,28 +63,19 @@ async function update_user_wrapper() {
             <div class="column column-1">
                 <div class="change-password">
                     <h3>change password:</h3>
-                    <label>
-                        <BaseInput v-model="settings.old_password" :width="240" type="password" placehoder="old password"></BaseInput>
-                    </label>
-                    <label>
-                        <BaseInput v-model="settings.new_password" :width="240" type="password" placehoder="new password"></BaseInput>
-                    </label>
-                    <label>
-                        <BaseInput v-model="settings.confirm_new_password" :width="240" type="password" placehoder="confirm new password"></BaseInput>
-                    </label>
+                    <label><BaseInput v-model="settings.old_password" :width="240" type="password" placehoder="old password"></BaseInput></label>
+                    <label><BaseInput v-model="settings.new_password" :width="240" type="password" placehoder="new password"></BaseInput></label>
+                    <label><BaseInput v-model="settings.confirm_new_password" :width="240" type="password" placehoder="confirm new password"></BaseInput></label>
                 </div>
             </div>
             <div class="column column-2">
                 <div class="change-username">
                     <h3>change username:</h3>
-                    <label>
-                        <BaseInput v-model="settings.username" :width="240" placehoder="username"></BaseInput>
-                    </label>
+                    <label><BaseInput v-model="settings.username" :width="240" placehoder="username"></BaseInput></label>
                 </div>
                 <div class="change-email">
                     <h3>change email:</h3>
-                    <label>
-                        <BaseInput v-model="settings.email" :width="240" type="email" placehoder="email"></BaseInput>
+                    <label><BaseInput v-model="settings.email" :width="240" type="email" placehoder="email"></BaseInput>
                     </label>
                 </div>
                 <BaseButton @click.prevent="update_user_wrapper" :width="240">Save</BaseButton>
