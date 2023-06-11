@@ -13,8 +13,6 @@ import BaseReview from '@/components/BaseReview.vue';
 import type { Review } from '@/assets/interfaces/review/IReview';
 import type { ReviewCreate } from '@/assets/interfaces/review/IReviewCreate';
 import type {CalculatorRun} from '@/assets/interfaces/calculator/ICalculatorRun';
-import * as io from "socket.io-client";
-import {connect_socket} from '@/assets/services/socket';
 
 interface Props {
     id: string
@@ -46,8 +44,8 @@ function curr_user_has_review(reviews: [Review], user: User) {
   return -1;
 }
 
-const reviews = reactive(await review_service.get_reviews(calculator.id) as [Review]);
-const has_review = ref(curr_user_has_review(reviews as [Review], curr_user as User));
+const reviews = reactive({data: await review_service.get_reviews(calculator.id) as [Review]});
+const has_review = ref(curr_user_has_review(reviews.data, curr_user as User));
 const calc_owner = ref(false);
 if ((curr_user as boolean) !== false) {
   calc_owner.value = (curr_user as User).id === calculator.author_id
@@ -60,29 +58,19 @@ async function run_calc() {
   calculatorRun.output = await calculator_service.run_calculator(+props.id, calculatorRun.output) as string;
 }
 
-const socket_url = import.meta.env.VITE_SOCKET_URL;
-const socket = io.connect(socket_url, {
-  query: {
-    'calculator_id': props.id
-  }
-});
-const socket_connected = ref(true);
-console.log(socket);
+async function delete_review_wrapper() {
+  await review_service.delete_review(+props.id);
+  reviews.data = await review_service.get_reviews(calculator.id) as [Review];
+  has_review.value = curr_user_has_review(reviews.data, curr_user as User);
+}
 
-socket.on('connected', () => {
-  console.log(socket.id);
-  socket_connected.value = true;
-})
+async function create_review_wrapper() {
+  await review_service.create_review(+props.id, reviewCreate);
+  reviews.data = await review_service.get_reviews(calculator.id) as [Review];
+  has_review.value = curr_user_has_review(reviews.data, curr_user as User);
 
-socket.on('disconnected', () => {
-  console.log(socket.id);
-  socket_connected.value = false;
-})
+}
 
-socket.on("reviews_changed", (args) => {
-  console.log('aksjdkljaskldjasd');
-  console.log(args);      
-})
 </script>
 
 <template>
@@ -127,16 +115,16 @@ socket.on("reviews_changed", (args) => {
                 <option value="1">1</option>
               </select>
             </label>
-            <BaseButton :width="240" @click.prevent="review_service.create_review(+props.id, reviewCreate)">Send</BaseButton>
+            <BaseButton :width="240" @click.prevent="create_review_wrapper">Send</BaseButton>
         </div>
 
         <div class="review_wrapper_box">
           <h3>reviews:</h3>
-          <BaseButton v-if="has_review !== -1" :width="200" @click.prevent="review_service.delete_review(+props.id)">Delete my review</BaseButton>
+          <BaseButton v-if="has_review !== -1" :width="200" @click.prevent="delete_review_wrapper">Delete my review</BaseButton>
         </div>
 
         <div class="reviews">
-          <BaseReview v-for="review in reviews" :review="(review as Review)"></BaseReview>
+          <BaseReview v-for="review in reviews.data" :review="review"></BaseReview>
         </div>
 </div>
 </section>

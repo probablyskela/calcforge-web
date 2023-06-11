@@ -4,6 +4,11 @@ import { useAuthStore } from '@/stores/auth.store';
 
 const authStore = useAuthStore();
 
+async function toggle_mobile_menu() {
+    document.querySelectorAll('.header_nav__mobile').forEach(element => {
+        element.classList.toggle('active');
+    })
+}
 </script>
 
 <template>
@@ -26,6 +31,8 @@ const authStore = useAuthStore();
             <RouterLink v-if="!authStore.authorized" to="/sign-in">sign in</RouterLink>
             <a v-else @click.prevent="authStore.sign_out">sign out</a>
         </div>
+
+        <a class="header_nav-btn__mobile" @click.prevent="toggle_mobile_menu">menu ></a>
  
         <nav class="header_nav__mobile">
             <ul>
@@ -33,12 +40,12 @@ const authStore = useAuthStore();
                     <RouterLink to="/profile" v-if="authStore.authorized">profile</RouterLink>
                 </li>
                 <li>
-                    <RouterLink to="/">calculators</RouterLink>
+                    <RouterLink to="/calculators">calculators</RouterLink>
                 </li>
-                <li>
-                    <RouterLink to="/">sign in</RouterLink>
+                <li v-if="!authStore.authorized">
+                    <RouterLink to="/sign-in" >sign in</RouterLink>
                 </li>
-                <li>
+                <li v-else>
                     <a @click.prevent="authStore.sign_out">sign out</a>
                 </li>
             </ul>
@@ -81,6 +88,10 @@ const authStore = useAuthStore();
     .header_nav__mobile {
         display: none;
     }
+
+    .header_nav-btn__mobile {
+        display: none;
+    }
 }
 
 @media (max-width: 768px) {
@@ -88,8 +99,45 @@ const authStore = useAuthStore();
         display: none !important;
     }
 
-    .header_nav__mobile {
+    .header_nav-btn__mobile {
         display: block !important;
+        margin-left: auto;
+    }
+
+    .header_nav__mobile {
+        top: 80px;
+        left: 0;
+        position: absolute;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 10px 10px 20px 10px;
+        background-color: $light-main;
+        border-bottom: 1px solid $dark-main;
+        z-index: 999;
+
+        &.active {
+            display: block !important;
+        }
+
+        ul {
+        margin: 10px 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid $dark-main;
+
+            a {
+            @include link-underline($dark-main);
+            @include fix-text();
+            display: inline !important;
+            font-size: 20px;
+            }
+        }
+        }
     }
 }
 </style>

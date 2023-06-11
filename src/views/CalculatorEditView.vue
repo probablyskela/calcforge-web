@@ -48,7 +48,7 @@ const calculatorSettings = reactive(<CalculatorSettings> {
 <template>
 <section id="edit-calc-section">
 <div class="section-wrapper">
-    <h2>create calculator</h2>
+    <h2>edit calculator</h2>
     <label for="">
         <h3>calculator name:</h3>
         <BaseInput v-model="calculatorSettings.name" :width="240" type="text" placehoder="name"></BaseInput>

@@ -61,6 +61,8 @@ export class review_service {
                 return false;
             }
 
+            review.message = '';
+
             return res.data;
         } catch (error: any) {
             console.log(error);
